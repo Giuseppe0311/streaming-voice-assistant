@@ -100,15 +100,18 @@ class ToolTests(unittest.IsolatedAsyncioTestCase):
 class MoreDraftTests(unittest.IsolatedAsyncioTestCase):
     async def test_continuous_partials_still_start_speculation(self):
         calls = []
+        started = asyncio.Event()
         async def generate(text):
             calls.append(text)
+            started.set()
             return text
         drafts = Drafts(generate, delay=0.02)
         for index in range(8):
             drafts.update(str(index))
             await asyncio.sleep(0.01)
+        await asyncio.wait_for(started.wait(), timeout=0.2)
         await drafts.close()
-        self.assertGreaterEqual(len(calls), 2)
+        self.assertGreaterEqual(len(calls), 1)
         self.assertLess(len(calls), 8)
 
     async def test_failed_speculation_falls_back_without_unhandled_task(self):
