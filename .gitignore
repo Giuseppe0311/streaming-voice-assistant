@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.deps/
+.env
+.idea/
+.atl/
+*.egg-info/
+pytest-cache-files-*/
+.coverage
+htmlcov/
+.DS_Store
